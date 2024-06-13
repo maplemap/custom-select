@@ -1,0 +1,13 @@
+@import '~mixins';
+
+.selectContainer {
+  text-align: center;
+  width: toRem(300);
+  margin: toRem(20) auto;
+}
+
+.usersCount {
+  text-align: left;
+  font-size: toRem(12);
+  margin: toRem(5) auto;
+}

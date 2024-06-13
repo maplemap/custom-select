@@ -1,20 +1,10 @@
-import {CustomSelect} from './components/custom-select';
-import './styles/main.scss';
-
-const options = Array.from(
-  {length: 100000},
-  (_, index) => `Option ${index + 1}`,
-);
+import {UserPage} from '@/modules/users';
+import '@/styles/main.scss';
 
 const App = () => {
-  const handleSelectChange = () => {};
-
   return (
     <div className="App">
-      <h1>Custom Select Component</h1>
-      <div style={{width: '300px'}}>
-        <CustomSelect options={options} onChange={handleSelectChange} />
-      </div>
+      <UserPage />
     </div>
   );
 };

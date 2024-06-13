@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import {useState, useRef, useEffect} from 'react';
 import {FixedSizeList as List} from 'react-window';
+import {KEYBOARD_KEY} from '@/constants';
 import {ChevronIcon} from '../icons/chevron';
-import {KEYBOARD_KEY} from '../../constants';
 import styles from './custom-select.module.scss';
 
 const LABEL = 'Select an option';
@@ -20,7 +20,7 @@ export const CustomSelect = ({label = LABEL, options, onChange}) => {
   const selectRef = useRef(null);
   const listRef = useRef(null);
 
-  const selectLabel = selectedIndex >= 0 ? options[selectedIndex] : label;
+  const selectLabel = selectedIndex >= 0 ? options[selectedIndex].value : label;
 
   useEffect(() => {
     if (isOpen) {
@@ -109,15 +109,19 @@ export const CustomSelect = ({label = LABEL, options, onChange}) => {
         onMouseMove={onItemMouseMove}
         onClick={() => onItemClick(index)}
       >
-        {options[index]}
+        {options[index].value}
       </div>
     );
   };
 
+  const selectClassName = classNames(styles.select, {
+    [styles.select_disabled]: options.length === 0,
+  });
+
   return (
     <div className={styles.container}>
       <div
-        className={styles.select}
+        className={selectClassName}
         tabIndex="0"
         onClick={() => {
           setIsOpen(!isOpen);
