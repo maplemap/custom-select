@@ -1,0 +1,54 @@
+.custom-select-container {
+    position: relative;
+    font-family: Arial, sans-serif;
+}
+
+.selected-option {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.options-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    border: 1px solid #ccc;
+    background: white;
+    z-index: 1;
+    overflow: auto;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.option.hover, option:hover {
+    background: #ddd;
+}
+
+.option.selected {
+    background: #bbb;
+}
+
+/* Custom scrollbar for macOS look */
+.options-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+.options-list::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 3px solid #fff;
+}
+
+.chevron-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
