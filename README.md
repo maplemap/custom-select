@@ -33,3 +33,5 @@ The project is structured in the following way:
    - `variables.scss` - style variables for the project
   - `app.js` - main application component
   - `index.js` - entry point of the application
+
+# CI/CD
