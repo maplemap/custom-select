@@ -1,75 +1,31 @@
+import classNames from 'classnames';
 import {useState, useRef, useEffect} from 'react';
 import {FixedSizeList as List} from 'react-window';
-import './custom-select.css';
+import {ChevronIcon} from '../icons/chevron';
+import {KEYBOARD_KEY} from '../../constants';
+import styles from './custom-select.module.scss';
 
-export const CustomSelect = ({options, onChange}) => {
+const LABEL = 'Select an option';
+const INTERACTION = {
+  KEYBOARD: 'keyboard',
+  MOUSE: 'mouse',
+};
+
+export const CustomSelect = ({label = LABEL, options, onChange}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [hoverIndex, setHoverIndex] = useState(-1);
-  const [lastInteraction, setLastInteraction] = useState(null); // 'mouse' or 'keyboard'
+  const [lastInteraction, setLastInteraction] = useState(null);
+
   const selectRef = useRef(null);
   const listRef = useRef(null);
 
-  const handleKeyDown = (e) => {
-    setLastInteraction('keyboard');
-
-    if (e.key === 'ArrowDown') {
-      if (!isOpen) {
-        setIsOpen(true);
-        setHoverIndex(selectedIndex >= 0 ? selectedIndex : 0);
-      } else {
-        setHoverIndex((prevIndex) => {
-          const newIndex = Math.min(prevIndex + 1, options.length - 1);
-          listRef.current.scrollToItem(newIndex);
-          return newIndex;
-        });
-      }
-    } else if (e.key === 'ArrowUp') {
-      if (!isOpen) {
-        setIsOpen(true);
-        setHoverIndex(selectedIndex >= 0 ? selectedIndex : 0);
-      } else {
-        setHoverIndex((prevIndex) => {
-          const newIndex = Math.max(prevIndex - 1, 0);
-          listRef.current.scrollToItem(newIndex);
-          return newIndex;
-        });
-      }
-    } else if (e.key === 'Enter' && isOpen) {
-      if (hoverIndex >= 0) {
-        setSelectedIndex(hoverIndex);
-        onChange(options[hoverIndex]);
-        setIsOpen(false);
-      }
-    } else if (e.key === 'Escape') {
-      setIsOpen(false);
-    }
-  };
-
-  const handleBlur = (e) => {
-    // Затримка перед закриттям списку для обробки події кліку
-    setTimeout(() => {
-      if (!e.currentTarget?.contains(document.activeElement)) {
-        setIsOpen(false);
-      }
-    }, 300);
-  };
-
-  const handleMouseEnter = (index) => {
-    if (lastInteraction !== 'keyboard') {
-      setHoverIndex(index);
-    }
-  };
-
-  const handleMouseMove = () => {
-    if (lastInteraction !== 'mouse') {
-      setLastInteraction('mouse');
-    }
-  };
+  const selectLabel = selectedIndex >= 0 ? options[selectedIndex] : label;
 
   useEffect(() => {
     if (isOpen) {
       selectRef.current.focus();
+
       if (selectedIndex >= 0) {
         listRef.current.scrollToItem(selectedIndex);
         setHoverIndex(selectedIndex);
@@ -77,47 +33,111 @@ export const CustomSelect = ({options, onChange}) => {
     }
   }, [isOpen, selectedIndex]);
 
-  return (
-    <div className="custom-select-container">
+  const onKeyDown = ({key}) => {
+    setLastInteraction(INTERACTION.KEYBOARD);
+
+    switch (key) {
+      case KEYBOARD_KEY.ARROW_DOWN:
+      case KEYBOARD_KEY.ARROW_UP: {
+        if (!isOpen) {
+          setIsOpen(true);
+          setHoverIndex(selectedIndex >= 0 ? selectedIndex : 0);
+        } else {
+          const newIndex =
+            key === KEYBOARD_KEY.ARROW_DOWN
+              ? Math.min(hoverIndex + 1, options.length - 1)
+              : Math.max(hoverIndex - 1, 0);
+          listRef.current.scrollToItem(newIndex);
+          setHoverIndex(newIndex);
+        }
+
+        break;
+      }
+
+      case KEYBOARD_KEY.ENTER: {
+        if (isOpen && hoverIndex >= 0) {
+          setSelectedIndex(hoverIndex);
+          onChange(options[hoverIndex]);
+          setIsOpen(false);
+        }
+
+        break;
+      }
+
+      case KEYBOARD_KEY.ESCAPE: {
+        setIsOpen(false);
+        break;
+      }
+    }
+  };
+
+  const onBlur = () => {
+    setTimeout(() => {
+      setIsOpen(false);
+    }, 150);
+  };
+
+  const onItemClick = (index) => {
+    setSelectedIndex(index);
+    onChange(options[index]);
+    setIsOpen(false);
+  };
+
+  const onItemMouseEnter = (index) => {
+    if (lastInteraction !== INTERACTION.KEYBOARD) {
+      setHoverIndex(index);
+    }
+  };
+
+  const onItemMouseMove = () => {
+    if (lastInteraction !== INTERACTION.MOUSE) {
+      setLastInteraction(INTERACTION.MOUSE);
+    }
+  };
+
+  const getSelectItem = ({index, style}) => {
+    const className = classNames(styles.optionItem, {
+      [styles.optionItem_hover]: hoverIndex === index,
+      [styles.optionItem_selected]: selectedIndex === index,
+    });
+
+    return (
       <div
-        className="selected-option"
+        className={className}
+        style={style}
+        onMouseEnter={() => onItemMouseEnter(index)}
+        onMouseMove={onItemMouseMove}
+        onClick={() => onItemClick(index)}
+      >
+        {options[index]}
+      </div>
+    );
+  };
+
+  return (
+    <div className={styles.container}>
+      <div
+        className={styles.select}
         tabIndex="0"
         onClick={() => {
           setIsOpen(!isOpen);
         }}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
+        onKeyDown={onKeyDown}
+        onBlur={onBlur}
         ref={selectRef}
       >
-        {selectedIndex >= 0 ? options[selectedIndex] : 'Select an option'}
-        <svg className="chevron-icon" viewBox="0 0 24 24">
-          <path d="M7 10l5 5 5-5z" />
-        </svg>
+        {selectLabel}
+        <ChevronIcon className={styles.chevronIcon} />
       </div>
       {isOpen && (
         <List
           height={150}
           itemSize={30}
-          className="options-list"
+          className={styles.optionsList}
           itemCount={options.length}
           ref={listRef}
         >
-          {({index, style}) => (
-            <div
-              className={`option ${hoverIndex === index ? 'hover' : ''} ${selectedIndex === index ? 'selected' : ''}`}
-              style={style}
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseMove={handleMouseMove}
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedIndex(index);
-                onChange(options[index]);
-                setIsOpen(false);
-              }}
-            >
-              {options[index]}
-            </div>
-          )}
+          {getSelectItem}
         </List>
       )}
     </div>

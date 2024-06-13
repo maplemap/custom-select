@@ -1,0 +1,56 @@
+@import '~mixins';
+
+.container {
+    position: relative;
+    font-family: Arial, sans-serif;
+}
+
+.select {
+    display: flex;
+    justify-content: space-between;
+    padding: toRem(10);
+    border: toRem(1) solid #ccc;
+    cursor: pointer;
+}
+
+.optionsList {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    border: toRem(1) solid #ccc;
+    background: white;
+    z-index: 1;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        width: toRem(12);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: toRem(10);
+        border: toRem(3) solid #fff;
+    }
+}
+
+.optionItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover,
+    &_hover {
+        background: #ddd;
+    }
+
+    &_selected {
+        background: #bbb;
+    }
+}
+
+.chevronIcon {
+    width: toRem(20);
+    height: toRem(20);
+    fill: currentColor;
+}
