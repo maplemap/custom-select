@@ -1,6 +1,6 @@
 # [EDU] Custom Select component
 This is a custom select component that was created for educational purposes. 
-It is a simple component that can be used in any project. It is almost production-ready component, and also it can be used as a base for a more complex component.
+It is almost production-ready component, and also it can be used as a base for a more complex component.
 
 ## Demo 🚀
 You can see the **[Demo Here](https://maplemap.github.io/custom-select/)** .
