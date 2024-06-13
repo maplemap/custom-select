@@ -35,3 +35,8 @@ The project is structured in the following way:
   - `index.js` - entry point of the application
 
 # CI/CD
+The project uses GitHub Actions for CI/CD. 
+The configuration file is located in the `.github/workflows` folder. 
+The workflow is triggered on push and pull request events. The workflow consists of the following steps:
+- Run checking of lint rule
+- Run checking of tests
