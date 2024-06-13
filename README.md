@@ -37,6 +37,9 @@ The project is structured in the following way:
 # CI/CD
 The project uses GitHub Actions for CI/CD. 
 The configuration file is located in the `.github/workflows` folder. 
-The workflow is triggered on push and pull request events. The workflow consists of the following steps:
-- Run checking of lint rule
-- Run checking of tests
+- `frontend.yml` - configuration file which runs:
+ - checking of ESLint rules
+ - unit tests
+- `deploy.yml` - configuration file which runs:
+ - building of the project
+ - deployment of the project to the GitHub Pages
