@@ -1,4 +1,4 @@
-name: Frontend Code Quality
+name: frontend code checks
 on:
   workflow_call: {}
   pull_request:
