@@ -38,8 +38,8 @@ The project is structured in the following way:
 The project uses GitHub Actions for CI/CD. 
 The configuration file is located in the `.github/workflows` folder. 
 - `frontend.yml` - configuration file which runs:
- - checking of ESLint rules
- - unit tests with checking of code coverage
+  - checking of ESLint rules
+  - unit tests with checking of code coverage
 - `deploy.yml` - configuration file which runs:
- - building of the project
- - deployment of the project to the GitHub Pages
+  - building of the project
+  - deployment of the project to the GitHub Pages
