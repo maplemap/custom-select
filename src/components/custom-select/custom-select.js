@@ -1,8 +1,8 @@
-import classNames from 'classnames';
-import {useState, useRef, useEffect} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {FixedSizeList as List} from 'react-window';
-import {KEYBOARD_KEY} from '@/constants';
+import classNames from 'classnames';
 import {ChevronIcon} from '@/components/icons/chevron';
+import {KEYBOARD_KEY} from '@/constants';
 import styles from './custom-select.module.scss';
 
 const LABEL = 'Select an option';
